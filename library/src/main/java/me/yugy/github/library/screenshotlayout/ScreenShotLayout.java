@@ -271,7 +271,9 @@ public class ScreenShotLayout extends FrameLayout {
                                 .append("Device: ").append(Build.DEVICE).append("\n")
                                 .append("Brand: ").append(Build.BRAND).append("\n")
                                 .append("Manufacturer: ").append(Build.MANUFACTURER).append("\n")
-                                .append("Api Level: ").append(Build.VERSION.SDK_INT);
+                                .append("Api Level: ").append(Build.VERSION.SDK_INT).append("\n")
+                                .append("\n")
+                                .append("Question Description: ");
 
                         Intent emailIntent = new Intent(Intent.ACTION_SEND);
                         emailIntent.setType("application/image");
