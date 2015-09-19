@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="ring_stroke_size">16dp</dimen>
+    <dimen name="ring_size">128dp</dimen>
+    <dimen name="screenshot_padding">16dp</dimen>
+
+</resources>
