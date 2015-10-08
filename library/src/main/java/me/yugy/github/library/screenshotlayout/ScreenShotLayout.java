@@ -132,9 +132,9 @@ public class ScreenShotLayout extends FrameLayout {
 //        Log.d(TAG, MotionEvent.actionToString(ev.getActionMasked()));
         switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_POINTER_DOWN:
-                int index = ev.getActionIndex();
-                if (index == 2) {
-                    mActivePointIndex = index;
+                int count = ev.getPointerCount();
+                if (count == 3) {
+                    mActivePointIndex = ev.getActionIndex();
                     mInitialDownY = ev.getY(mActivePointIndex);
                 }
                 return false;
@@ -157,8 +157,7 @@ public class ScreenShotLayout extends FrameLayout {
                 }
                 return false;
             case MotionEvent.ACTION_POINTER_UP:
-                index = ev.getActionIndex();
-                if (index == 2) {
+                if (ev.getActionIndex() == 2) {
                     mIsDragging = false;
                     mInitialDownY = INVALID;
                     mActivePointIndex = INVALID;
