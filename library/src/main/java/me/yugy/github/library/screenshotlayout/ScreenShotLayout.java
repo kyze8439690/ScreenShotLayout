@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -45,8 +46,12 @@ public class ScreenShotLayout extends FrameLayout {
     private static final int SCREENSHOT_COLOR = 0xCCFFFFFF;
 
     public static ScreenShotLayout attachToActivity(Activity activity) {
+        return attachToActivity(activity, null);
+    }
+
+    public static ScreenShotLayout attachToActivity(Activity activity, @Nullable OnAttachListener listener) {
         ScreenShotLayout layout = new ScreenShotLayout(activity);
-        layout.attach(activity);
+        layout.attach(activity, listener);
         return layout;
     }
 
@@ -66,6 +71,7 @@ public class ScreenShotLayout extends FrameLayout {
     private boolean mIsInScreenShotAnimation = false;
     private boolean mIsInScreenShot = false;
     private int mScreenShotColor;
+    @Nullable private OnAttachListener mOnAttachListener;
 
     public ScreenShotLayout(Context context) {
         this(context, null);
@@ -270,9 +276,14 @@ public class ScreenShotLayout extends FrameLayout {
                                 .append("Device: ").append(Build.DEVICE).append("\n")
                                 .append("Brand: ").append(Build.BRAND).append("\n")
                                 .append("Manufacturer: ").append(Build.MANUFACTURER).append("\n")
-                                .append("Api Level: ").append(Build.VERSION.SDK_INT).append("\n")
-                                .append("\n")
-                                .append("Question Description: ");
+                                .append("Api Level: ").append(Build.VERSION.SDK_INT).append("\n");
+                        if (mOnAttachListener != null) {
+                            contentBuilder.append(mOnAttachListener.onAttach(getContext())).append("\n");
+                        }
+                        contentBuilder.append("\n")
+                                .append("Question Description: ")
+                                .append("\n");
+
 
                         Intent emailIntent = new Intent(Intent.ACTION_SEND);
                         emailIntent.setType("application/image");
@@ -297,10 +308,12 @@ public class ScreenShotLayout extends FrameLayout {
         startAnimation(flashAnimation);
     }
 
-    private void attach(Activity activity) {
+    private void attach(Activity activity, @Nullable OnAttachListener listener) {
         if (getParent() != null) {
             throw new IllegalStateException("This layout has been added into a ViewGroup.");
         }
+
+        mOnAttachListener = listener;
 
         ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
         ViewGroup decorChild = (ViewGroup) decor.getChildAt(0);
@@ -328,4 +341,9 @@ public class ScreenShotLayout extends FrameLayout {
         int res = getContext().checkCallingOrSelfPermission(permission);
         return (res == PackageManager.PERMISSION_GRANTED);
     }
+
+    public interface OnAttachListener {
+        String onAttach(Context context);
+    }
+
 }
